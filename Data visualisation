@@ -1,0 +1,44 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Set the seaborn theme
+sns.set(style="whitegrid")
+
+# Load the Iris dataset
+iris = load_iris()
+
+# Create a DataFrame with feature data
+df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+
+# Add target as species name
+df['species'] = iris.target
+df['species'] = df['species'].map({0: 'setosa', 1: 'versicolor', 2: 'virginica'})
+
+# Show first few rows (optional)
+print("First 5 rows of the dataset:\n", df.head())
+
+# 1. Pairplot
+sns.pairplot(df, hue='species', diag_kind='kde', height=2)
+plt.suptitle('Pairplot of Iris Features', y=1.02)
+plt.show()
+
+# 2. Boxplot - Sepal Length by Species
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=df, x='species', y='sepal length (cm)', palette="Set2")
+plt.title("Boxplot of Sepal Length by Species")
+plt.xlabel("Species")
+plt.ylabel("Sepal Length (cm)")
+plt.show()
+
+# 3. Heatmap - Correlation between features
+plt.figure(figsize=(7, 5))
+sns.heatmap(df.iloc[:, :-1].corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title("Feature Correlation Heatmap")
+plt.show()
+
+# 4. Histograms of all numeric features
+df.iloc[:, :-1].hist(figsize=(10, 8), bins=15, edgecolor='black')
+plt.suptitle("Histograms of Iris Features", y=1.02)
+plt.show()
